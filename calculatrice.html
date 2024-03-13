@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
+    <style>
+      .main {
+        margin: auto;
+        width: 80%;
+        text-align: center;
+      }
+      .centered {
+        margin: auto;
+        width: 100%;
+        text-align: center;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .center-results {
+        margin: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      input {
+        display: inline-block;
+        width: 400px;
+      }
+      .btn-container {
+        margin: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      button {
+        margin-top: 30px;
+        cursor: pointer;
+        outline: 0;
+        display: block;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: center;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 6px 12px;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        color: #8721bd;
+        border-color: #8721bd;
+      }
+
+      button:hover,
+      button:focus {
+        color: #fff;
+        background-color: #8721bd;
+        border-color: #8721bd;
+      }
+
+      .congrats {
+        font-size: 40px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function App(props) {
+        const [num1, setNum1] = React.useState('');
+        const [num2, setNum2] = React.useState('');
+        const [result, setResult] = React.useState('');
+        const [resultsList, setResultsList] = React.useState([]);
+        const [message, setMessage] = React.useState('');
+
+        const handleChangeNum1 = (e) => {
+          const { value } = e.target;
+          if (isNaN(value)) {
+            return alert(`"${value}" is not a number!`);
+          }
+          setNum1(value);
+        };
+
+        const handleChangeNum2 = (e) => {
+          const { value } = e.target;
+          if (isNaN(value)) {
+            return alert(`"${value}" is not a number!`);
+          }
+          setNum2(value);
+        };
+
+        const handleAddition = (e) => {
+          setResult(parseFloat(num1) + parseFloat(num2));
+          if (result !== '') {
+            setResultsList([...resultsList, result]);
+          }
+        };
+
+        const handleMultiplication = (e) => {
+          setResult(parseFloat(num1) * parseFloat(num2));
+          if (result !== '') {
+            setResultsList([...resultsList, result]);
+          }
+        };
+
+        const handleReset = (e) => {
+          setNum1(0);
+          setNum2(0);
+          setResult(0);
+        };
+
+        React.useEffect(() => {
+          return () => {
+            if (resultsList.length === 9) {
+              setNum1(0);
+              setNum2(0);
+              setResult(0);
+              setMessage('Bravo! 🥳🚀🥰');
+            }
+          };
+        }, [resultsList]);
+
+        return (
+          <div className="centered">
+            <h3> Previous results: </h3>
+            <ul className="center-results">
+              {resultsList.map((res, i) => (
+                <li key={i}>{res}</li>
+              ))}
+            </ul>
+            <div className="input-container">
+              <h3> First number: </h3>
+              <input
+                type="text"
+                onChange={handleChangeNum1}
+                value={num1}
+                name="num1"
+              />
+            </div>
+            <div className="input-container">
+              <h3> Second number: </h3>
+              <input
+                type="text"
+                onChange={handleChangeNum2}
+                value={num2}
+                name="num2"
+              />
+            </div>
+            <div className="btn-container">
+              <button onClick={handleAddition}> + </button>
+              <button onClick={handleMultiplication}> x </button>
+              <button onClick={handleReset}> Reset </button>
+            </div>
+            <div className="input-container">
+              <h3> Result: </h3>
+              <input type="text" value={result} name="result" />
+            </div>
+            {message !== '' && <h3 className="congrats">{message}</h3>}
+          </div>
+        );
+      }
+
+      const root = document.getElementById('root');
+      ReactDOM.createRoot(root).render(<App />);
+    </script>
+  </body>
+</html>
